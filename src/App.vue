@@ -1,12 +1,10 @@
-<script setup>
-</script>
-
 <template>
   <header>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+    <nav>
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/book-edit">Book Edit</RouterLink>
+      <RouterLink to="/preview-and-download">Preview and Download</RouterLink>
+    </nav>
   </header>
   <div class="view">
     <RouterView />
