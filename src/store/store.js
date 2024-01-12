@@ -11,8 +11,11 @@ export const useBook = defineStore('storeId', {
             finalImageData: null,
             bookData: {
                 title: '',
+                titlePosition: {x: 0, y: 0},
                 author: '',
-            }
+                authorPosition: {x:0, y:0},
+            },
+
     }),
     getters: {
         getRawImageData() {
@@ -25,6 +28,8 @@ export const useBook = defineStore('storeId', {
             return {
                 title: this.bookData.title,
                 author: this.bookData.author,
+                titlePosition: this.bookData.titlePosition,
+                authorPosition: this.bookData.authorPosition,
             }
         },
     },
@@ -41,7 +46,15 @@ export const useBook = defineStore('storeId', {
             // only title and author are allowed
             this.bookData.title = data.title
             this.bookData.author = data.author
-            console.log(this.bookData)
+
+            console.log(data)
+        },
+        setTitlePosition(position) {
+            this.bookData.titlePosition = position
+            console.log('title position', this.bookData.titlePosition)
+        },
+        setAuthorPosition(position) {
+            this.bookData.authorPosition = position
         },
     }
 })

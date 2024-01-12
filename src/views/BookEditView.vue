@@ -6,6 +6,7 @@ import DragableTextomponent from '@/DragableTextomponent.vue';
 import { storeToRefs } from 'pinia'
 import { useBook } from '../store/store.js';
 
+
 const image = ref(null);
 const imageUrl = ref(null);
 const router = useRouter();
@@ -61,8 +62,8 @@ const  nextPageToPreviewImage = () => {
 		<input type="file" accept="image/*" @change="handleFileAdd">
 		<div class="image-container" ref="imageContainer">
 			<div class="image-container" v-if="getRawImageData">
-				<DragableTextomponent :text="getBookData.title" :container="imageContainer" @selectText="(a) => console.log(a)" />
-				<DragableTextomponent :text="getBookData.author" :container="imageContainer" @selectText="(a) => console.log(a)" />
+				<DragableTextomponent :text="getBookData.title" :container="imageContainer" @selectText="(a) => console.log(a)" type="title" />
+				<DragableTextomponent :text="getBookData.author" :container="imageContainer" @selectText="(a) => console.log(a)" type="author" />
 				<img v-if="getRawImageData" :src="getRawImageData" class="image" alt="Uploaded image">
 			</div>
 		</div>
