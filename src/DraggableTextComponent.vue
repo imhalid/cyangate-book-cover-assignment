@@ -1,8 +1,11 @@
 <!-- MoveableTitle.vue -->
 <template>
-    <h1 class="title" ref="title" :style="{ left: `${x}px`, top: `${y}px` }" @click="$emit('selectText', {data: true})" @mousedown="moveStart" @mousemove="move"
-        @mouseup="moveEnd">
-        {{ text }}
+    <h1 class="title" ref="title" :style="{ left: `${x}px`, top: `${y}px` }" 
+    @click="$emit('selectText', {type: type })" 
+    @mousedown="moveStart" 
+    @mousemove="move"
+    @mouseup="moveEnd">
+    {{ text }}
     </h1>
 </template>
 
@@ -10,21 +13,16 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia'
 import { useBook } from '../src/store/store.js';
+
 const book = useBook();
 const { getBookData } = storeToRefs(book);
-console.log(getBookData.titlePosition)
 const props = defineProps({
     text: String,
     container: HTMLElement,
     type: String,
 });
 
-
-// emit
 defineEmits(['selectText']);
-
-console.log(props);
-
 let title = ref(null);
 const x = ref(0);
 const y = ref(0);
@@ -32,12 +30,20 @@ const mouseDown = ref(false);
 let startX = 0;
 let startY = 0;
 
-if (props.type === 'title') {
-    x.value = getBookData.value.titlePosition.x;
-    y.value = getBookData.value.titlePosition.y;
-} else if (props.type === 'author') {
-    x.value = getBookData.value.authorPosition.x;
-    y.value = getBookData.value.authorPosition.y;
+if (getBookData.value.titlePosition.x > 1) {
+    const position = props.type === 'title'
+        ? getBookData.value.titlePosition
+        : getBookData.value.authorPosition;
+    x.value = position.x;
+    y.value = position.y;
+} else if (getBookData.value.titlePosition.x === 0) {
+    const defaults = {
+        title: { x: 20, y: 40 },
+        author: { x: 20, y: 80 }
+    };
+    const defaultPosition = defaults[props.type];
+    x.value = defaultPosition.x;
+    y.value = defaultPosition.y;
 }
 
 onMounted(() => {
@@ -69,7 +75,7 @@ const move = (e) => {
     let newX = e.clientX - startX;
     let newY = e.clientY - startY;
     let containerWidth = props.container.offsetWidth;
-    let containerHeight = props.offsetHeight;
+    let containerHeight = props.container.offsetHeight;
     let titleWidth = title.value.offsetWidth;
     let titleHeight = title.value.offsetHeight;
 
@@ -81,7 +87,6 @@ const move = (e) => {
     x.value = newX;
     y.value = newY;
     setTitlePosition(newX, newY);
-    console.log(getBookData.value.titlePosition)
 };
 
 const moveEnd = () => {
@@ -98,5 +103,6 @@ const moveEnd = () => {
     padding: 0;
     white-space: nowrap;
     user-select: none;
+    cursor: move;
 }
 </style>

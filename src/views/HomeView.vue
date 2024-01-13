@@ -1,64 +1,94 @@
 <template>
-	<select v-model="state.selected" @change="fetchListData">
-		<option v-for="(item, index) in state.data" :key="index" :value="item">
-			{{ item.list_name }}
-		</option>
-	</select>
-	<select v-if="state.listData" v-model="selectedBook" @change="add">
-		<option v-for="(item, index) in state.listData" :key="index" :value="item">
-			{{ item.book_details[0].title }}
-		</option>
-	</select>
-	<router-link :to="!state.listData ? '' : '/book-edit'"
-		:class="['defaultClass', !state.listData ? 'disableButton' : 'activeButton']">Next</router-link>
+	<div class="container">
+
+		<div class="list-name">
+			<label for="listName">List Name</label>
+			<a-select style="width: 15rem;" id="listName" v-model:value="selected" @change="fetchListData" placeholder="Select your option">
+				<a-select-option v-for="(item, index) in getBooksLists" :key="index" :value="item.list_name_encoded">
+					{{ item.list_name }}
+				</a-select-option>
+			</a-select>
+
+		</div>
+		<div v-if="selected" class="book-list">
+			<label for="bookList">Book List</label>
+			<a-select style="width: 15rem;" id="bookList" v-model:value="selectedBook" @change="addBook" placeholder="Select your option">
+				<a-select-option v-for="(item, index) in getListsNames" :key="index" :value="index">
+					{{ item.title }}
+				</a-select-option>
+			</a-select>
+		</div>
+		<div class="buttonContainer" v-if="selectedBook">
+			<router-link :to="!getBooksLists ? '' : '/book-edit'">
+			<a-button type="primary" :disabled="selectedBook === null ? true : false">Next</a-button>
+			</router-link>
+		</div>
+	</div>
 </template>
 
 <script setup>
 import { storeToRefs } from 'pinia'
-import { reactive, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useBook } from '../store/store.js';
-const book = useBook();
-const {getBookData} = storeToRefs(book);
 
-// reactive ve ref arasındaki fark nedir?
-const state = reactive({
-	data: [],
-	selected: null,
-	listData: null,
-});
+const book = useBook();
+const { getBooksLists, getListsNames } = storeToRefs(book);
+
+const selected = ref(null);
 
 const selectedBook = ref(null);
 
-const add = () => {
-	book.setBookData(selectedBook.value?.book_details[0]);
-	console.log(getBookData.value.title)
+const addBook = () => {
+	book.setBookData(getListsNames.value[selectedBook.value]);
 };
 
 
-onMounted(async () => {
-	try {
-		const response = await fetch('https://api.nytimes.com/svc/books/v3/lists/names.json?api-key=AydaTuOw7sG8ANNZU7wAAPPKVNINLTsj');
-		const json = await response.json();
-		state.data = json.results;
-	} catch (error) {
-		console.error('Error:', error);
-	}
+onMounted(() => {
+	getBooksLists.value.length <= 0 && book.fetchBooksLists()
 });
 
 const fetchListData = async () => {
-	if (!state.selected) return;
-	try {
-		const response = await fetch(`https://api.nytimes.com/svc/books/v3/lists.json?list=${state.selected.list_name_encoded}&api-key=AydaTuOw7sG8ANNZU7wAAPPKVNINLTsj`);
-		const json = await response.json();
-		state.listData = json.results;
-		console.log(state.listData);
-	} catch (error) {
-		console.error('Error:', error);
-	}
+	if (!getBooksLists.value) return;
+	await book.fetchListsNames(selected.value)
+	console.log(getListsNames.value);
 };
 </script>
 
 <style scoped>
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.buttonContainer {
+	margin-top: 2rem;
+}
+
+.list-name {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}
+
+.book-list {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 1rem;
+	width: 100%;
+}
+
+#bookList,
+#listName {
+	width: 15rem;
+}
+
 .defaultClass {
 	background-color: #ccc;
 	padding: 0.5rem 1rem;
