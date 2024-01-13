@@ -7,7 +7,6 @@
 					{{ item.list_name }}
 				</a-select-option>
 			</a-select>
-
 		</div>
 		<div v-if="selectedBookList" class="book-list">
 			<label for="bookList">Book List</label>

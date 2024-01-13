@@ -70,7 +70,7 @@ const imageSizes = ref({
 	height: 0,
 });
 
-const FONT_SIZES = ['20px', '24px', '28px'];
+const FONT_SIZES = ['20px', '24px', '26px', '28px'];
 const COLORS = ['red', 'blue', 'green', 'white', 'black'];
 const LETTER_SPACINGS = ['-1px','0px', '2px', '3px'];
 
