@@ -43,11 +43,9 @@ export const useBook = defineStore('storeId', {
 	actions: {
 		setRawImageData(rawImageData) {
 			this.rawImageData = rawImageData
-			console.log('image data', this.rawImageData)
 		},
 		setFinalImageData(finalImageData) {
 			this.finalImageData = finalImageData
-			console.log('image data', this.finalImageData)
 		},
 		setBookData(data) {
 			this.bookData.title = data.title

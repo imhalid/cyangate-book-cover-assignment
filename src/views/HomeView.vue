@@ -1,16 +1,15 @@
 <template>
 	<div class="container">
-
 		<div class="list-name">
 			<label for="listName">List Name</label>
-			<a-select style="width: 15rem;" id="listName" v-model:value="selected" @change="fetchListData" placeholder="Select your option">
+			<a-select style="width: 15rem;" id="listName" v-model:value="selectedBookList" @change="fetchListData" placeholder="Select your option">
 				<a-select-option v-for="(item, index) in getBooksLists" :key="index" :value="item.list_name_encoded">
 					{{ item.list_name }}
 				</a-select-option>
 			</a-select>
 
 		</div>
-		<div v-if="selected" class="book-list">
+		<div v-if="selectedBookList" class="book-list">
 			<label for="bookList">Book List</label>
 			<a-select style="width: 15rem;" id="bookList" v-model:value="selectedBook" @change="addBook" placeholder="Select your option">
 				<a-select-option v-for="(item, index) in getListsNames" :key="index" :value="index">
@@ -19,10 +18,10 @@
 			</a-select>
 		</div>
 		<div class="buttonContainer" v-if="selectedBook">
-			<router-link :to="!getBooksLists ? '' : '/book-edit'">
-			<a-button type="primary" :disabled="selectedBook === null ? true : false">Next</a-button>
-			</router-link>
-		</div>
+	        <router-link v-if="getBooksLists" to="/book-edit">
+	            <a-button type="primary" :disabled="!selectedBook">Next</a-button>
+	        </router-link>
+	    </div>
 	</div>
 </template>
 
@@ -34,14 +33,12 @@ import { useBook } from '../store/store.js';
 const book = useBook();
 const { getBooksLists, getListsNames } = storeToRefs(book);
 
-const selected = ref(null);
-
+const selectedBookList = ref(null);
 const selectedBook = ref(null);
 
 const addBook = () => {
 	book.setBookData(getListsNames.value[selectedBook.value]);
 };
-
 
 onMounted(() => {
 	getBooksLists.value.length <= 0 && book.fetchBooksLists()
@@ -49,8 +46,7 @@ onMounted(() => {
 
 const fetchListData = async () => {
 	if (!getBooksLists.value) return;
-	await book.fetchListsNames(selected.value)
-	console.log(getListsNames.value);
+	await book.fetchListsNames(selectedBookList.value)
 };
 </script>
 
@@ -60,6 +56,7 @@ const fetchListData = async () => {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	font-size: 16px;
 }
 
 .buttonContainer {

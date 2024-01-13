@@ -1,17 +1,18 @@
 <template>
   <header>
     <nav>
+      <a-button @click="goBack" :disabled="backButtonPassive">Back</a-button>
       <a-breadcrumb separator=">">
-      <a-breadcrumb-item>
-      <RouterLink to="/">Home</RouterLink>
-      </a-breadcrumb-item>
-      <a-breadcrumb-item :class="{ 'bold-class': editPageActive, 'disabled-class': !editPageAvailable }">
-        <RouterLink to="/book-edit">Book Edit</RouterLink>
-      </a-breadcrumb-item>
-      <a-breadcrumb-item :class="{ 'bold-class': previewPageActive, 'disabled-class': !previewPageAvailable }">
-        <RouterLink to="/preview-and-download">Preview and Download</RouterLink>
-      </a-breadcrumb-item>
-    </a-breadcrumb>
+        <a-breadcrumb-item>
+          <RouterLink to="/">Home</RouterLink>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item :class="{ 'bold-class': editPageActive, 'disabled-class': !editPageAvailable }">
+          <RouterLink to="/book-edit">Book Edit</RouterLink>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item :class="{ 'bold-class': previewPageActive, 'disabled-class': !previewPageAvailable }">
+          <RouterLink to="/preview-and-download">Preview and Download</RouterLink>
+        </a-breadcrumb-item>
+      </a-breadcrumb>
     </nav>
   </header>
   <div class="view">
@@ -22,34 +23,45 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useBook } from './store/store.js';
-import { useRoute } from 'vue-router';
-import {ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
+import { ref, watch } from 'vue'
 
 const editPageActive = ref(false)
 const previewPageActive = ref(false)
 const editPageAvailable = ref(false)
 const previewPageAvailable = ref(false)
+const backButtonPassive = ref(false)
 const route = useRoute();
 const book = useBook();
+const router = useRouter();
 
 const { getRawImageData, listsNames } = storeToRefs(book);
 
+const goBack = () => {
+  router.go(-1);
+};
+
 watch(route, (newRoute) => {
+
+  if (route.path === '/' && listsNames.value.length <= 0) {
+    backButtonPassive.value = true
+  } else {
+    backButtonPassive.value = false
+  }
+
   if (listsNames.value.length > 0) {
     editPageAvailable.value = true
-  } else  {
+  } else {
     editPageAvailable.value = false
   }
 
   if (getRawImageData.value) {
-    previewPageActive.value = true
     previewPageAvailable.value = true
   } else {
-    previewPageActive.value = false
     previewPageAvailable.value = false
   }
-  
-   if (newRoute.path === '/book-edit') {
+
+  if (newRoute.path === '/book-edit') {
     editPageActive.value = true
   } else {
     editPageActive.value = false
@@ -60,7 +72,6 @@ watch(route, (newRoute) => {
   } else {
     previewPageActive.value = false
   }
-
 });
 
 </script>
@@ -88,11 +99,11 @@ a {
 }
 
 .bold-class {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .disabled-class {
-    pointer-events: none;
-    opacity: 0.5;
+  pointer-events: none;
+  opacity: 0.5;
 }
 </style>

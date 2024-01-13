@@ -9,13 +9,17 @@
 import { storeToRefs } from 'pinia'
 import { useBook } from '../store/store.js';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+
 const router = useRouter();
 const book = useBook();
-const { getBookData, getFinalImageData, getRawImageData } = storeToRefs(book);
+const { listsNames, getFinalImageData, getBookData } = storeToRefs(book);
 
-if (!getRawImageData.value) {
-  router.push('/');
-}
+onMounted(() => {
+  if (listsNames.value.length <= 0) {
+    router.push('/');
+  }
+});
 
 const downloadImage = () => {
   const a = document.createElement('a');
