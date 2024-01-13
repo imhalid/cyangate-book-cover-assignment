@@ -1,13 +1,15 @@
 <template>
   <header>
     <nav>
-      <a-button @click="goBack" :disabled="backButtonPassive">Back</a-button>
+      <a-button @click="goBack" :disabled="backButtonPassive" class="backIcon">
+        <template #icon><BackIcon /></template>
+        Back</a-button>
       <a-breadcrumb separator=">">
         <a-breadcrumb-item>
           <RouterLink to="/">Home</RouterLink>
         </a-breadcrumb-item>
         <a-breadcrumb-item :class="{ 'bold-class': editPageActive, 'disabled-class': !editPageAvailable }">
-          <RouterLink to="/book-edit">Book Edit</RouterLink>
+          <RouterLink to="/cover-edit">Cover Edit</RouterLink>
         </a-breadcrumb-item>
         <a-breadcrumb-item :class="{ 'bold-class': previewPageActive, 'disabled-class': !previewPageAvailable }">
           <RouterLink to="/preview-and-download">Preview and Download</RouterLink>
@@ -25,6 +27,7 @@ import { storeToRefs } from 'pinia'
 import { useBook } from './store/store.js';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, watch } from 'vue'
+import BackIcon from './icons/BackIcon.vue';
 
 const editPageActive = ref(false)
 const previewPageActive = ref(false)
@@ -61,7 +64,7 @@ watch(route, (newRoute) => {
     previewPageAvailable.value = false
   }
 
-  if (newRoute.path === '/book-edit') {
+  if (newRoute.path === '/cover-edit') {
     editPageActive.value = true
   } else {
     editPageActive.value = false
@@ -77,17 +80,17 @@ watch(route, (newRoute) => {
 </script>
 
 <style scoped>
+.backIcon {
+  display: flex;
+  align-items: center;
+}
+
 nav {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
   gap: 1rem;
-}
-
-a {
-  text-decoration: none;
-  color: black;
 }
 
 .view {

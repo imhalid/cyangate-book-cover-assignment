@@ -9,8 +9,8 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/book-edit',
-      name: 'book-edit',
+      path: '/cover-edit',
+      name: 'cover-edit',
       component: () => import('../views/BookEditView.vue'),
       props: true
     },

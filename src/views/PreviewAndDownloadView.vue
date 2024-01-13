@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router';
 import { onMounted } from 'vue';
 
 const router = useRouter();
-const book = useBook();
+const book = useBook(); 
 const { listsNames, getFinalImageData, getBookData } = storeToRefs(book);
 
 onMounted(() => {

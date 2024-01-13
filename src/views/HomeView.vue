@@ -17,7 +17,7 @@
 			</a-select>
 		</div>
 		<div class="buttonContainer" v-if="selectedBook">
-	        <router-link v-if="getBooksLists" to="/book-edit">
+	        <router-link v-if="getBooksLists" to="/cover-edit">
 	            <a-button type="primary" :disabled="!selectedBook">Next</a-button>
 	        </router-link>
 	    </div>

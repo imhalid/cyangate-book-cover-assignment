@@ -101,8 +101,8 @@ const moveEnd = () => {
     top: 0;
     margin: 0;
     padding: 0;
-    white-space: nowrap;
     user-select: none;
+    text-align: center;
     cursor: move;
 }
 </style>
