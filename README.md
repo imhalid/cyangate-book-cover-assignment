@@ -1,14 +1,10 @@
-# .
+# Project Documentation
 
-This template should help get you started developing with Vue 3 in Vite.
+This project is a Vue.js application developed with Vite. It includes several components and views, and uses Vue Router for navigation and Pinia for state management. 
 
-## Recommended IDE Setup
+# Fixable Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+When downloading the image, the file size is quite large.
 
 ## Project Setup
 
